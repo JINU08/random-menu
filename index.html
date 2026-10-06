@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>오늘 뭐 먹지? - 랜덤 메뉴 추천기 🍽️</title>
+  <meta name="description" content="매일 고민되는 식사 메뉴! 한식, 중식, 일식, 양식 등 맛있는 메뉴를 랜덤으로 쏙쏙 추천해 드립니다.">
+  
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;600;700;800;900&family=Outfit:wght@500;700;800;900&display=swap" rel="stylesheet">
+  
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <!-- Floating background decorations -->
+  <div class="bg-decorations" aria-hidden="true">
+    <span class="floating-emoji e1">🍕</span>
+    <span class="floating-emoji e2">🍣</span>
+    <span class="floating-emoji e3">🍜</span>
+    <span class="floating-emoji e4">🍔</span>
+    <span class="floating-emoji e5">🥘</span>
+    <span class="floating-emoji e6">🍗</span>
+    <span class="floating-emoji e7">🥟</span>
+    <span class="floating-emoji e8">🥗</span>
+  </div>
+
+  <!-- Confetti Canvas -->
+  <canvas id="confettiCanvas"></canvas>
+
+  <div class="app-container">
+    <!-- Header / Sound Toggle -->
+    <header class="app-header">
+      <div class="logo-badge">
+        <span class="badge-icon">🎲</span>
+        <span class="badge-text">결정 장애 탈출 프로젝트</span>
+      </div>
+      <button id="soundToggleBtn" class="icon-toggle-btn" title="효과음 켜기/끄기" aria-label="효과음 토글">
+        <span id="soundIcon">🔊</span>
+      </button>
+    </header>
+
+    <!-- Main Content Center -->
+    <main class="main-card">
+      <div class="title-section">
+        <div class="title-tag">오늘의 추천 메뉴</div>
+        <h1 class="main-title">오늘 뭐 먹지?</h1>
+        <p class="subtitle">고민할 시간에 한 입 더! 지금 버튼을 눌러보세요.</p>
+      </div>
+
+      <!-- Category Filter Pills -->
+      <nav class="category-tabs" aria-label="메뉴 카테고리 선택">
+        <button class="cat-pill active" data-category="all">
+          <span class="cat-icon">✨</span>전체
+        </button>
+        <button class="cat-pill" data-category="korean">
+          <span class="cat-icon">🍚</span>한식
+        </button>
+        <button class="cat-pill" data-category="chinese">
+          <span class="cat-icon">🥟</span>중식
+        </button>
+        <button class="cat-pill" data-category="japanese">
+          <span class="cat-icon">🍣</span>일식
+        </button>
+        <button class="cat-pill" data-category="western">
+          <span class="cat-icon">🍕</span>양식
+        </button>
+        <button class="cat-pill" data-category="snack">
+          <span class="cat-icon">🥢</span>분식·기타
+        </button>
+      </nav>
+
+      <!-- Display Box / Slot Machine Area -->
+      <div class="display-container" id="displayContainer">
+        <!-- Initial Ready State -->
+        <div class="display-box initial-state" id="menuDisplay">
+          <div class="menu-icon-wrap" id="menuIconWrap">
+            <span class="menu-icon" id="menuIcon">🍽️</span>
+          </div>
+          <div class="menu-meta" id="menuMeta">
+            <span class="cat-badge" id="catBadge">준비 완료</span>
+          </div>
+          <h2 class="menu-name" id="menuName">메뉴 추천 대기 중</h2>
+          <p class="menu-desc" id="menuDesc">아래 '메뉴 추천하기' 버튼을 누르면 오늘의 운명적인 메뉴가 등장합니다!</p>
+          <div class="menu-tags" id="menuTags">
+            <span class="tag">#오늘의선택</span>
+            <span class="tag">#맛있는한끼</span>
+            <span class="tag">#뭐먹지</span>
+          </div>
+        </div>
+
+        <!-- Result Action Links (Hidden initially) -->
+        <div class="action-links" id="actionLinks">
+          <a id="naverMapLink" href="#" target="_blank" rel="noopener noreferrer" class="map-btn naver">
+            <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor">
+              <path d="M16.273 12.845 7.376 0H0v24h7.727V11.155L16.624 24H24V0h-7.727z"/>
+            </svg>
+            네이버 지도 검색
+          </a>
+          <a id="kakaoMapLink" href="#" target="_blank" rel="noopener noreferrer" class="map-btn kakao">
+            <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor">
+              <path d="M12 3c-5.52 0-10 3.58-10 8 0 2.82 1.83 5.3 4.63 6.69l-.94 3.7c-.12.48.33.88.76.66l4.67-2.43c.29.03.58.05.88.05 5.52 0 10-3.58 10-8s-4.48-8-10-8z"/>
+            </svg>
+            카카오맵 검색
+          </a>
+          <button id="copyMenuBtn" class="map-btn share" title="메뉴 이름 복사">
+            <span id="copyIcon">📋</span> 복사하기
+          </button>
+        </div>
+      </div>
+
+      <!-- Main Action Button -->
+      <div class="action-section">
+        <button id="recommendBtn" class="primary-btn pulse-anim">
+          <span class="btn-glow"></span>
+          <span class="btn-icon">🎲</span>
+          <span class="btn-text">메뉴 추천하기</span>
+        </button>
+      </div>
+
+      <!-- Quick Stats / History Toggle -->
+      <div class="history-section" id="historySection">
+        <div class="history-header">
+          <span class="history-title">⏱️ 최근 추천 기록</span>
+          <button id="clearHistoryBtn" class="clear-history-btn">기록 지우기</button>
+        </div>
+        <div class="history-list" id="historyList">
+          <span class="history-empty">아직 추천받은 메뉴가 없습니다.</span>
+        </div>
+      </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="app-footer">
+      <p>맛있는 한 끼로 오늘도 행복한 하루 보내세요! 😋</p>
+    </footer>
+  </div>
+
+  <!-- Toast Notification -->
+  <div id="toast" class="toast" role="alert" aria-live="polite"></div>
+
+  <script src="app.js"></script>
+</body>
+</html>
